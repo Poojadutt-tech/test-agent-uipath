@@ -1,0 +1,67 @@
+{
+    "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+    "$id": "entry-points.json",
+    "entryPoints": [
+        {
+            "filePath": "agent",
+            "uniqueId": "test-agent-001",
+            "type": "agent",
+            "input": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "title": "Message",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "message"
+                ]
+            },
+            "output": {
+                "type": "object",
+                "properties": {
+                    "result": {
+                        "title": "Result",
+                        "type": "string"
+                    }
+                },
+                "required": []
+            },
+            "graph": {
+                "nodes": [
+                    {
+                        "id": "__start__",
+                        "name": "__start__",
+                        "type": "Node",
+                        "subgraph": null
+                    },
+                    {
+                        "id": "process",
+                        "name": "process",
+                        "type": "Node",
+                        "subgraph": null
+                    },
+                    {
+                        "id": "__end__",
+                        "name": "__end__",
+                        "type": "Node",
+                        "subgraph": null
+                    }
+                ],
+                "edges": [
+                    {
+                        "source": "__start__",
+                        "target": "process",
+                        "label": null
+                    },
+                    {
+                        "source": "process",
+                        "target": "__end__",
+                        "label": null
+                    }
+                ]
+            }
+        }
+    ]
+}
