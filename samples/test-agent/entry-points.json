@@ -4,29 +4,90 @@
     "entryPoints": [
         {
             "filePath": "agent",
-            "uniqueId": "test-agent-001",
+            "uniqueId": "resume-fixer-agent-001",
             "type": "agent",
             "input": {
                 "type": "object",
                 "properties": {
-                    "message": {
-                        "title": "Message",
-                        "type": "string"
+                    "resume_text": {
+                        "title": "Resume Text",
+                        "type": "string",
+                        "description": "Full text of the resume (optional if resume_file_path is provided)"
+                    },
+                    "resume_file_path": {
+                        "title": "Resume File Path",
+                        "type": "string",
+                        "description": "Path to resume file - PDF or TXT format (optional if resume_text is provided)"
+                    },
+                    "target_role": {
+                        "title": "Target Role",
+                        "type": "string",
+                        "default": "Software Engineer",
+                        "description": "Target job role for resume optimization"
+                    },
+                    "years_experience": {
+                        "title": "Years of Experience",
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Years of professional experience"
                     }
                 },
-                "required": [
-                    "message"
-                ]
+                "required": []
             },
             "output": {
                 "type": "object",
                 "properties": {
-                    "result": {
-                        "title": "Result",
-                        "type": "string"
+                    "overall_score": {
+                        "title": "Overall Score",
+                        "type": "integer",
+                        "description": "Resume quality score (0-100)"
+                    },
+                    "strengths": {
+                        "title": "Strengths",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "List of resume strengths"
+                    },
+                    "weaknesses": {
+                        "title": "Weaknesses",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "List of areas needing improvement"
+                    },
+                    "specific_improvements": {
+                        "title": "Specific Improvements",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Actionable improvement recommendations"
+                    },
+                    "best_practices": {
+                        "title": "Best Practices",
+                        "type": "string",
+                        "description": "Current industry best practices for resumes"
+                    },
+                    "improved_sections": {
+                        "title": "Improved Sections",
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Rewritten resume sections ready to use"
                     }
                 },
-                "required": []
+                "required": [
+                    "overall_score",
+                    "strengths",
+                    "weaknesses",
+                    "specific_improvements",
+                    "best_practices",
+                    "improved_sections"
+                ]
             },
             "graph": {
                 "nodes": [
@@ -37,8 +98,32 @@
                         "subgraph": null
                     },
                     {
-                        "id": "process",
-                        "name": "process",
+                        "id": "load_resume",
+                        "name": "load_resume",
+                        "type": "Node",
+                        "subgraph": null
+                    },
+                    {
+                        "id": "research_best_practices",
+                        "name": "research_best_practices",
+                        "type": "Node",
+                        "subgraph": null
+                    },
+                    {
+                        "id": "analyze_resume",
+                        "name": "analyze_resume",
+                        "type": "Node",
+                        "subgraph": null
+                    },
+                    {
+                        "id": "generate_improvements",
+                        "name": "generate_improvements",
+                        "type": "Node",
+                        "subgraph": null
+                    },
+                    {
+                        "id": "finalize_output",
+                        "name": "finalize_output",
                         "type": "Node",
                         "subgraph": null
                     },
@@ -52,11 +137,31 @@
                 "edges": [
                     {
                         "source": "__start__",
-                        "target": "process",
+                        "target": "load_resume",
                         "label": null
                     },
                     {
-                        "source": "process",
+                        "source": "load_resume",
+                        "target": "research_best_practices",
+                        "label": null
+                    },
+                    {
+                        "source": "research_best_practices",
+                        "target": "analyze_resume",
+                        "label": null
+                    },
+                    {
+                        "source": "analyze_resume",
+                        "target": "generate_improvements",
+                        "label": null
+                    },
+                    {
+                        "source": "generate_improvements",
+                        "target": "finalize_output",
+                        "label": null
+                    },
+                    {
+                        "source": "finalize_output",
                         "target": "__end__",
                         "label": null
                     }

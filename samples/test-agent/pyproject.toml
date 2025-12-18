@@ -1,12 +1,16 @@
 [project]
-name = "test-agent"
+name = "resume-fixer-agent"
 version = "0.0.1"
-description = "Test Agent"
+description = "AI-powered resume analysis and improvement agent for software engineers"
 authors = [{ name = "John Doe", email = "john.doe@myemail.com" }]
 requires-python = ">=3.11"
 dependencies = [
     "uipath-langchain>=0.1.0, <0.2.0",
     "uipath>=2.2.0, <2.3.0",
+    "langchain-anthropic>=0.3.0",
+    "langchain-tavily>=0.2.0",
+    "langchain>=0.3.0",
+    "PyPDF2>=3.0.0",
 ]
 
 [project.optional-dependencies]

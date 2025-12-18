@@ -1,0 +1,37 @@
+JOHN DOE
+Software Engineer
+Email: john.doe@email.com | Phone: (555) 123-4567 | LinkedIn: linkedin.com/in/johndoe
+
+SUMMARY
+Software engineer with experience in web development and database management.
+
+EXPERIENCE
+
+Software Developer at Tech Company
+January 2020 - Present
+- Built web applications
+- Worked with databases
+- Fixed bugs and issues
+- Attended team meetings
+- Helped with code reviews
+
+Junior Developer at Startup Inc
+June 2018 - December 2020
+- Helped with coding tasks
+- Learned new technologies
+- Worked on various projects
+- Participated in standups
+
+EDUCATION
+
+Bachelor of Science in Computer Science
+State University, 2018
+GPA: 3.5/4.0
+
+SKILLS
+
+Programming Languages: Python, JavaScript, SQL
+Web Technologies: HTML, CSS, React
+Tools: Git, VS Code
+Databases: MySQL, PostgreSQL
+
