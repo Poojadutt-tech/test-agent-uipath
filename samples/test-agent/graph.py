@@ -9,6 +9,7 @@ from typing import Optional
 import PyPDF2
 import io
 import base64
+import os
 
 
 class ResumeInput(BaseModel):
@@ -121,7 +122,11 @@ async def load_resume(state: State) -> State:
 
 
 # Initialize tools and LLM
-tavily_tool = TavilySearch(max_results=5)
+# Make Tavily optional - only initialize if API key is available
+tavily_tool = None
+if os.getenv("TAVILY_API_KEY"):
+    tavily_tool = TavilySearch(max_results=5)
+
 # Using Claude 3.5 Haiku - faster and cheaper, good for resume analysis
 llm = ChatAnthropic(model="claude-3-5-haiku-20241022")
 
@@ -135,18 +140,23 @@ async def research_best_practices(state: State) -> State:
     best practices for software engineering resumes. Focus on: format, content structure,
     technical skills presentation, project descriptions, and ATS optimization.""")
 
-    user_msg = HumanMessage(content=f"Search for: {search_query}")
+    # Use Tavily to search if available, otherwise use LLM's built-in knowledge
+    if tavily_tool:
+        # Use Tavily to search for best practices
+        search_results = tavily_tool.invoke({"query": search_query})
 
-    # Use Tavily to search for best practices
-    search_results = tavily_tool.invoke({"query": search_query})
-
-    # Summarize findings with LLM
-    summary_prompt = f"""Based on these search results about resume best practices:
+        # Summarize findings with LLM
+        summary_prompt = f"""Based on these search results about resume best practices:
 
 {search_results}
 
 Provide a concise summary of the top 7 best practices for a {state.target_role} resume
 with {state.years_experience} years of experience. Format as a numbered list."""
+    else:
+        # No Tavily - use LLM's built-in knowledge
+        summary_prompt = f"""Provide a concise summary of the top 7 best practices for a {state.target_role} resume
+with {state.years_experience} years of experience in 2025. Focus on: format, content structure,
+technical skills presentation, project descriptions, and ATS optimization. Format as a numbered list."""
 
     response = await llm.ainvoke([
         system_msg,

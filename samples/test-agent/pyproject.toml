@@ -1,8 +1,8 @@
 [project]
 name = "resume-fixer-agent"
-version = "0.0.1"
+version = "1.0.3"
 description = "AI-powered resume analysis and improvement agent for software engineers"
-authors = [{ name = "John Doe", email = "john.doe@myemail.com" }]
+authors = [{ name = "Pooja Dutt", email = "pooja.dutt@example.com" }]
 requires-python = ">=3.11"
 dependencies = [
     "uipath-langchain>=0.1.0, <0.2.0",
