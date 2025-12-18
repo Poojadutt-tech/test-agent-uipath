@@ -8,17 +8,20 @@ from uipath.tracing import traced
 from typing import Optional
 import PyPDF2
 import io
+import base64
 
 
 class ResumeInput(BaseModel):
     """Input model for resume analysis.
 
-    Provide EITHER resume_text OR resume_file_path (not both).
+    Can be empty - user will be prompted to upload resume via form.
+    Or provide ONE of: resume_text, resume_file_path (local), or resume_base64 (UiPath deployment).
     """
     resume_text: Optional[str] = None
-    resume_file_path: Optional[str] = None  # Path to PDF, DOCX, or TXT file
-    target_role: str = "Software Engineer"
-    years_experience: int = 0
+    resume_file_path: Optional[str] = None  # Path to PDF/TXT file (local testing only)
+    resume_base64: Optional[str] = None  # Base64 encoded PDF (for UiPath deployment)
+    target_role: Optional[str] = None  # Will prompt if not provided
+    years_experience: Optional[int] = None  # Will prompt if not provided
 
 
 class ResumeOutput(BaseModel):
@@ -33,8 +36,9 @@ class ResumeOutput(BaseModel):
 
 class State(BaseModel):
     """Internal state for resume processing."""
-    resume_text: str = ""  # Will be populated from either text or file
+    resume_text: str = ""  # Will be populated from text, file, or base64
     resume_file_path: Optional[str] = None
+    resume_base64: Optional[str] = None
     target_role: str = "Software Engineer"
     years_experience: int = 0
     best_practices: str = ""
@@ -72,6 +76,15 @@ def extract_text_from_pdf(file_path: str) -> str:
     return text.strip()
 
 
+def extract_text_from_pdf_bytes(pdf_bytes: bytes) -> str:
+    """Extract text from PDF bytes (for base64 input)."""
+    pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_bytes))
+    text = ""
+    for page in pdf_reader.pages:
+        text += page.extract_text() + "\n"
+    return text.strip()
+
+
 def extract_text_from_txt(file_path: str) -> str:
     """Extract text from a TXT file."""
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -93,12 +106,16 @@ def extract_text_from_file(file_path: str) -> str:
 
 @traced(name="load_resume")
 async def load_resume(state: State) -> State:
-    """Load resume from file if file_path is provided."""
+    """Load resume from file, base64, or text."""
     if state.resume_file_path:
-        # Extract text from file
+        # Local file path (for testing)
         state.resume_text = extract_text_from_file(state.resume_file_path)
+    elif state.resume_base64:
+        # Base64 encoded PDF (for UiPath deployment)
+        pdf_bytes = base64.b64decode(state.resume_base64)
+        state.resume_text = extract_text_from_pdf_bytes(pdf_bytes)
     elif not state.resume_text:
-        raise ValueError("Either resume_text or resume_file_path must be provided")
+        raise ValueError("Must provide one of: resume_text, resume_file_path, or resume_base64")
 
     return state
 

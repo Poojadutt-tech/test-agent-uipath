@@ -17,18 +17,21 @@
                     "resume_file_path": {
                         "title": "Resume File Path",
                         "type": "string",
-                        "description": "Path to resume file - PDF or TXT format (optional if resume_text is provided)"
+                        "description": "Path to resume file - PDF or TXT format (local testing only)"
+                    },
+                    "resume_base64": {
+                        "title": "Resume Base64",
+                        "type": "string",
+                        "description": "Base64 encoded PDF resume (for UiPath deployment)"
                     },
                     "target_role": {
                         "title": "Target Role",
                         "type": "string",
-                        "default": "Software Engineer",
                         "description": "Target job role for resume optimization"
                     },
                     "years_experience": {
                         "title": "Years of Experience",
                         "type": "integer",
-                        "default": 0,
                         "description": "Years of professional experience"
                     }
                 },
